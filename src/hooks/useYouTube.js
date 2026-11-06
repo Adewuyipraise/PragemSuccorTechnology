@@ -146,3 +146,34 @@ export function useLiveStreams(status = 'live', maxResults = 6) {
 
   return { streams, loading, error };
 }
+
+
+export function useChannelPlaylists(maxResults = 6) {
+  const [playlists, setPlaylists] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      if (!API_KEY || !CHANNEL_ID) return;
+      try {
+        const url = `https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&channelId=${CHANNEL_ID}&maxResults=${maxResults}&key=${API_KEY}`;
+        const data = await fetchWithCache(url, `yt_playlists_${CHANNEL_ID}`);
+        
+        const formatted = data.items.map(item => ({
+          id: item.id,
+          title: item.snippet.title,
+          thumbnail: item.snippet.thumbnails.high?.url,
+          videoCount: item.contentDetails.itemCount
+        }));
+        setPlaylists(formatted);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [maxResults]);
+
+  return { playlists, loading };
+}
