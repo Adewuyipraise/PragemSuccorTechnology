@@ -67,7 +67,10 @@ const MediaAcademy = () => {
                 <div className="p-6 md:w-2/3 flex flex-col justify-center">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{course.title}</h3>
                   <p className="text-gray-600 mb-4">{course.description}</p>
-                  <Link to="/contact" className="text-secondary font-semibold hover:underline">
+                  <Link
+                    to={`/contact?course=${encodeURIComponent(course.title)}`}
+                    className="text-secondary font-semibold hover:underline"
+                  >
                     Enquire Now
                   </Link>
                 </div>

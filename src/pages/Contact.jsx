@@ -15,8 +15,18 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Thank you for your message! We will get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    const form = e.target;
+    const data = new FormData(form);
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(data).toString(),
+    })
+      .then(() => {
+        alert("Thanks! We'll get back to you soon.");
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      })
+      .catch(() => alert("Something went wrong. Please try again."));
   };
 
   return (
@@ -85,7 +95,14 @@ const Contact = () => {
           {/* Contact Form */}
           <div className="bg-white p-8 rounded-xl shadow-lg">
             <h2 className="text-2xl font-bold text-gray-900 mb-8">Send a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              onSubmit={handleSubmit}
+              className="space-y-6"
+            >
+              <input type="hidden" name="form-name" value="contact" />
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
                 <input

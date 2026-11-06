@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/pragemlogo3.png';
 import logo1 from '../assets/pragemlogo1.jpg';
@@ -7,6 +7,11 @@ import { Menu, X, Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'luci
 const Layout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -61,6 +66,8 @@ const Layout = ({ children }) => {
             <div className="md:hidden flex items-center">
               <button
                 onClick={toggleMenu}
+                aria-label="Toggle navigation menu"
+                aria-expanded={isOpen}
                 className="text-gray-700 hover:text-primary focus:outline-none"
               >
                 {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -89,9 +96,7 @@ const Layout = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow">
-        {children}
-      </main>
+      <main className="flex-grow">{children}</main>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white pt-12 pb-8">
@@ -100,10 +105,10 @@ const Layout = ({ children }) => {
             {/* Company Info */}
             <div>
               <img
-                  src={logo1}
-                  alt="Pragem Succor Technology Logo"
-                  className="h-20 w-auto object-contain"
-                />
+                src={logo1}
+                alt="Pragem Succor Technology Logo"
+                className="h-20 w-auto object-contain mb-4"
+              />
               <p className="text-gray-400 mb-4">
                 A leading Media Group dedicated to excellence in production, education, and publishing.
               </p>
